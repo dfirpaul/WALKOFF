@@ -4,7 +4,7 @@ cd into this directory
 
 docker build -t walkoff/walkoff-app .
 
-docker run --name walkoff-app -dit --network devnet --ip="172.18.0.3" --entrypoint=/bin/bash walkoff/walkoff-app
+docker run --name walkoff-app -dit --network devnet --ip="172.18.0.4" --entrypoint=/bin/bash walkoff/walkoff-app
 
 docker exec -it walkoff-app /bin/bash
 

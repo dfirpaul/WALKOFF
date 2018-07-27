@@ -19,6 +19,13 @@ docker exec -it walkoff-worker /bin/bash
 export WALKOFF_DB_USERNAME=walkoff
 export WALKOFF_DB_PASSWORD=walkoff
 
+docker exec -it walkoff-postgres /bin/bash
+su - postgres
+psql
+CREATE USER walkoff WITH PASSWORD walkoff
+ALTER USER walkoff WITH SUPERUSER
+export WALKOFF_DB_USERNAME=walkoff
+export WALKOFF_DB_PASSWORD=walkoff
 
 when ready to start workers:
 
