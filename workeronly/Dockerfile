@@ -28,7 +28,6 @@ RUN easy_install pip \
   && pip install --upgrade pip \
   && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip3 /usr/bin/pip; fi
 
-RUN ping 127.0.0.1 -c 1
 # Clone our GitHub Repository
 RUN git clone -b worker_executables --single-branch --progress --verbose https://www.github.com/nsacyber/WALKOFF.git ./walkoff
 #RUN pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple walkoff[redis]==0.8.3b7 --no-cache-dir
@@ -36,6 +35,9 @@ RUN git clone -b worker_executables --single-branch --progress --verbose https:/
 # Setup WALKOFF
 #RUN echo "walkoff" | walkoff-setup
 WORKDIR /app/walkoff
+
+RUN git reset --hard 0a779cfaeda15782877b67c89389b223378b2fbd
+
 RUN python setup_walkoff.py
 RUN pip install redis
 RUN pip install psycopg2
@@ -47,18 +49,20 @@ RUN pip install psycopg2
 
 #WORKDIR /app/walkoff
 
+RUN ping 127.0.0.1 -c 5
 
+COPY [ "./app.py", "/app/walkoff/apps/HelloWorld" ]
 COPY [ "./update_config.py", "/app/walkoff/" ]
 COPY [ "./dist", "/app/walkoff/walkoff/client/dist" ]
 COPY [ "./node_modules", "/app/walkoff/walkoff/client/node_modules" ]
 COPY [ "./.certificates", "/app/walkoff/.certificates" ]
 
-
 RUN python update_config.py
 
 # Make port 5000 available to the world outside this container
-EXPOSE 5000 5556 5557
+EXPOSE 5556 5557
 
 # Run WALKOFF
 #CMD walkoff-run
 CMD python start_workers.py -c data/walkoff.config
+#CMD /bin/bash
